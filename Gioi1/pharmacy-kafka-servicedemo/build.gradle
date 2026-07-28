@@ -1,0 +1,67 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '4.1.0'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+description = 'pharmacy-kafka-servicedemo'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-kafka'
+    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-kafka-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+    testCompileOnly 'org.projectlombok:lombok'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+    dependencies {
+        // Thư viện Spring Web (dành cho Controller, REST API)
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+
+        // Thư viện Spring for Apache Kafka (dành cho KafkaTemplate)
+        implementation 'org.springframework.kafka:spring-kafka'
+
+        // (Tùy chọn) Jackson Jackson module để xử lý Java 8 Date/Time nếu cần
+        implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testImplementation 'org.springframework.kafka:spring-kafka-test'
+
+        dependencies {
+            // Thư viện đã có từ Bài 1 & 2
+            implementation 'org.springframework.boot:spring-boot-starter-web'
+            implementation 'org.springframework.kafka:spring-kafka'
+
+            // BỔ SUNG BÀI 3: Thư viện làm việc với Database
+            implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+            // Dùng H2 Database (Database chạy ngầm trong bộ nhớ RAM, rất tiện test không cần cài Postgres/MySQL)
+            runtimeOnly 'com.h2database:h2'
+
+            // (Nếu dùng MySQL/Postgres thật thì bỏ comment dòng tương ứng):
+            // runtimeOnly 'com.mysql:mysql-connector-j'
+            // runtimeOnly 'org.postgresql:postgresql'
+
+            testImplementation 'org.springframework.boot:spring-boot-starter-test'
+            testImplementation 'org.springframework.kafka:spring-kafka-test'
+        }
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

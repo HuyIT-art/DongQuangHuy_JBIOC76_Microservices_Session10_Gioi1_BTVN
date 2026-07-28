@@ -1,0 +1,31 @@
+server:
+  port: 8080
+
+spring:
+  # Cấu hình Database H2 ngầm
+  datasource:
+    url: jdbc:h2:mem:pharmacy_db
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update # Tự động tạo bảng Database từ Class Entity
+
+  # Cấu hình Kafka
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+    # BỔ SUNG BÀI 3: Cấu hình Consumer
+    consumer:
+      group-id: inventory-group # Group ID xử lý kho
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        # Cho phép Consumer deserialize JSON thành đối tượng OrderEvent
+        spring.json.trusted.packages: "*"
